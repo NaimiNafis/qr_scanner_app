@@ -1,0 +1,1 @@
+// The view for showing history/favorites
