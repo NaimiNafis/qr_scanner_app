@@ -1,0 +1,1 @@
+// All sqflite database code (singleton class)

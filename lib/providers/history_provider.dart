@@ -1,0 +1,1 @@
+// Manages history/favorites state and logic
