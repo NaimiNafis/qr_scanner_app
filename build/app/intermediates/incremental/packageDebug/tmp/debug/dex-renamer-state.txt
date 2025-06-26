@@ -1,4 +1,4 @@
-#Thu Jun 26 14:52:12 JST 2025
+#Thu Jun 26 15:21:53 JST 2025
 base.0=/Users/naiminfs/repos/qr_scanner_app/build/app/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 base.1=/Users/naiminfs/repos/qr_scanner_app/build/app/intermediates/dex/debug/mergeLibDexDebug/0/classes.dex
 base.2=/Users/naiminfs/repos/qr_scanner_app/build/app/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex

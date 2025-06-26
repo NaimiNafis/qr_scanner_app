@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_scanner_app/providers/history_provider.dart';
 import 'package:qr_scanner_app/screens/scanner_screen.dart';
 import 'package:qr_scanner_app/screens/history_screen.dart';
+import 'package:qr_scanner_app/screens/creator_screen.dart';
 
 // Main entry point for the app
 // Sets up provider for state management and configures the app theme
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       home: const ScannerScreen(),
       routes: {
         '/history': (context) => const HistoryScreen(),
+        '/creator': (context) => const CreatorScreen(),
       },
     );
   }

@@ -31,18 +31,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
         actions: [
           IconButton(
             color: AppColors.textLight,
-            icon: Icon(
-              isFlashlightOn ? Icons.flash_on : Icons.flash_off,
-            ),
-            onPressed: () {
-              setState(() {
-                isFlashlightOn = !isFlashlightOn;
-                controller.toggleTorch();
-              });
-            },
-          ),
-          IconButton(
-            color: AppColors.textLight,
             icon: const Icon(Icons.settings),
             onPressed: () {
               // Open settings (to be implemented)
@@ -52,6 +40,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
       ),
       body: Column(
         children: [
+          // Scanner view with frame
           Expanded(
             child: Stack(
               alignment: Alignment.center,
@@ -97,56 +86,96 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: AppColors.primary,
-                      width: 3,
+                      width: 5, // Bolder border
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   width: 250,
                   height: isQrMode ? 250 : 150, // Change height based on mode
                 ),
+                
+                // Scanner controls - positioned towards the bottom of the scanner view
+                Positioned(
+                  bottom: 70, // Positioned higher up from the bottom
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Flash toggle
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isFlashlightOn = !isFlashlightOn;
+                            controller.toggleTorch();
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.primary,
+                          ),
+                          child: Icon(
+                            isFlashlightOn ? Icons.flash_on : Icons.flash_off,
+                            color: AppColors.textLight,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(width: 60),
+                      
+                      // QR/Barcode toggle
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isQrMode = !isQrMode;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.primary,
+                          ),
+                          child: Icon(
+                            isQrMode ? Icons.qr_code : Icons.view_week,
+                            color: AppColors.textLight,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
           
-          // Bottom controls for mode switching and flash
+          // Bottom navigation bar
           Container(
             color: AppColors.primary,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Scanner mode button (left)
+                // Scan button (current screen)
                 _buildBottomButton(
                   icon: Icons.crop_free,
                   label: 'Scan',
                   isActive: true,
                 ),
                 
-                // Switch between QR and barcode mode (middle)
-                GestureDetector(
+                // Creator button (navigates to creator screen)
+                _buildBottomButton(
+                  icon: Icons.qr_code_2,
+                  label: 'Creator',
+                  isActive: false,
                   onTap: () {
-                    setState(() {
-                      isQrMode = !isQrMode;
-                    });
+                    Navigator.pushNamed(context, '/creator');
                   },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.bolt,
-                        color: AppColors.textLight,
-                      ),
-                      const SizedBox(width: 10),
-                      Icon(
-                        isQrMode 
-                          ? Icons.qr_code 
-                          : Icons.bar_chart_rounded,
-                        color: AppColors.textLight,
-                      ),
-                    ],
-                  ),
                 ),
                 
-                // History button (right)
+                // History button
                 _buildBottomButton(
                   icon: Icons.history,
                   label: 'History',
