@@ -1,1 +1,0 @@
-// The view for creating QR codes

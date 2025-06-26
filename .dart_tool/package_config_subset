@@ -62,6 +62,14 @@ path
 3.4
 file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/path-1.9.1/
 file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/path-1.9.1/lib/
+qr
+3.4
+file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/qr-3.0.2/
+file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/qr-3.0.2/lib/
+qr_flutter
+2.19
+file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/qr_flutter-4.1.0/
+file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/qr_flutter-4.1.0/lib/
 source_span
 3.1
 file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/source_span-1.10.1/
@@ -106,7 +114,7 @@ flutter_test
 3.7
 file:///Users/isel-yoshii/src/flutter/packages/flutter_test/
 file:///Users/isel-yoshii/src/flutter/packages/flutter_test/lib/
-qr
+qr_app
 3.7
 file:///Users/isel-yoshii/src/qr/
 file:///Users/isel-yoshii/src/qr/lib/

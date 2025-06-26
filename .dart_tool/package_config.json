@@ -110,6 +110,18 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "qr",
+      "rootUri": "file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/qr-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "qr_flutter",
+      "rootUri": "file:///Users/isel-yoshii/.pub-cache/hosted/pub.dev/qr_flutter-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/isel-yoshii/src/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -164,7 +176,7 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "qr",
+      "name": "qr_app",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.7"
