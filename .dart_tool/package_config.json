@@ -99,7 +99,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/naiminfs/flutter/packages/flutter",
+      "rootUri": "file:///Users/naiminfs/development/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -123,13 +123,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/naiminfs/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/naiminfs/development/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/naiminfs/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/naiminfs/development/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -345,7 +345,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/naiminfs/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/naiminfs/development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -434,8 +434,32 @@
       "languageVersion": "3.5"
     },
     {
+      "name": "url_launcher",
+      "rootUri": "file:///Users/naiminfs/.pub-cache/hosted/pub.dev/url_launcher-6.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/naiminfs/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.16",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///Users/naiminfs/.pub-cache/hosted/pub.dev/url_launcher_ios-6.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "url_launcher_linux",
       "rootUri": "file:///Users/naiminfs/.pub-cache/hosted/pub.dev/url_launcher_linux-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///Users/naiminfs/.pub-cache/hosted/pub.dev/url_launcher_macos-3.2.2",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -500,10 +524,10 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-06-25T12:55:48.863516Z",
+  "generated": "2025-06-26T07:24:49.569519Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
-  "flutterRoot": "file:///Users/naiminfs/flutter",
+  "flutterRoot": "file:///Users/naiminfs/development/flutter",
   "flutterVersion": "3.29.3",
   "pubCache": "file:///Users/naiminfs/.pub-cache"
 }
