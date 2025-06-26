@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_scanner_app/providers/history_provider.dart';
-import 'package:qr_scanner_app/screens/home_screen.dart';
+import 'package:qr_scanner_app/screens/scanner_screen.dart';
+import 'package:qr_scanner_app/screens/history_screen.dart';
+
+// Main entry point for the app
+// Sets up provider for state management and configures the app theme
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +26,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'QR Scanner',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(),
+      home: const ScannerScreen(),
+      routes: {
+        '/history': (context) => const HistoryScreen(),
+      },
     );
   }
 }
