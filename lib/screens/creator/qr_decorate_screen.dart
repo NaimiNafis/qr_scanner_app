@@ -5,7 +5,7 @@ import '../../models/qr_create_data.dart';
 class QrDecorateScreen extends StatefulWidget {
   final QrCreateData qrData;
 
-  const QrDecorateScreen({Key? key, required this.qrData}) : super(key: key);
+  const QrDecorateScreen({super.key, required this.qrData});
 
   @override
   State<QrDecorateScreen> createState() => _QrDecorateScreenState();
@@ -52,7 +52,14 @@ class _QrDecorateScreenState extends State<QrDecorateScreen> {
                 data: widget.qrData.content,
                 version: QrVersions.auto,
                 size: 240,
-                foregroundColor: foregroundColor,
+                eyeStyle: QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: foregroundColor,
+                ),
+                dataModuleStyle: QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: foregroundColor,
+                ),
                 backgroundColor: backgroundColor,
               ),
             ),

@@ -9,7 +9,7 @@ import '../utils/app_colors.dart';
 import 'result_screen.dart';
 
 class ScannerScreen extends StatefulWidget {
-  const ScannerScreen({Key? key}) : super(key: key);
+  const ScannerScreen({super.key});
 
   @override
   State<ScannerScreen> createState() => _ScannerScreenState();
@@ -55,7 +55,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
                       controller.stop();
                       
                       final String code = barcodes.first.rawValue ?? '';
-                      final String format = barcodes.first.format.name;
                       
                       // Determine the type based on content heuristics
                       String type = _determineContentType(code);

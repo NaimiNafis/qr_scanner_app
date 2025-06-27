@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 
 class CreatorScreen extends StatelessWidget {
-  const CreatorScreen({Key? key}) : super(key: key);
+  const CreatorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

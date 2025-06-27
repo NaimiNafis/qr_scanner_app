@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/history_provider.dart';
-import '../models/qr_code_model.dart';
 import '../utils/app_colors.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -17,12 +16,12 @@ class ResultScreen extends StatelessWidget {
   final bool? isFavorite;
 
   const ResultScreen({
-    Key? key,
+    super.key,
     required this.content,
     required this.type,
     this.id,
     this.isFavorite,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +147,7 @@ class ResultScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.success, width: 2),
                   borderRadius: BorderRadius.circular(15),
-                  color: AppColors.success.withOpacity(0.05),
+                  color: AppColors.success.withAlpha(13),
                 ),
                 child: Row(
                   children: [

@@ -5,7 +5,7 @@ import 'qr_result_screen.dart';
 class QrInputScreen extends StatefulWidget {
   final String qrType;
 
-  const QrInputScreen({Key? key, required this.qrType}) : super(key: key);
+  const QrInputScreen({super.key, required this.qrType});
 
   @override
   State<QrInputScreen> createState() => _QrInputScreenState();
