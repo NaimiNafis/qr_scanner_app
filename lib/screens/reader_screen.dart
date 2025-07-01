@@ -1,0 +1,1 @@
+// The camera view for scanning QR codes
