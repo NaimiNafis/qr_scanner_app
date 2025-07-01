@@ -171,7 +171,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/naiminfs/flutter/packages/flutter",
+      "rootUri": "file:///Users/naiminfs/development/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -201,13 +201,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/naiminfs/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/naiminfs/development/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/naiminfs/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/naiminfs/development/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -525,7 +525,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/naiminfs/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/naiminfs/development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -740,10 +740,10 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-07-01T03:21:37.649559Z",
+  "generated": "2025-07-01T04:20:33.069299Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
-  "flutterRoot": "file:///Users/naiminfs/flutter",
+  "flutterRoot": "file:///Users/naiminfs/development/flutter",
   "flutterVersion": "3.29.3",
   "pubCache": "file:///Users/naiminfs/.pub-cache"
 }

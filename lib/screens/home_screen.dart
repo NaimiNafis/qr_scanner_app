@@ -1,1 +1,0 @@
-// The main screen with bottom navigation
