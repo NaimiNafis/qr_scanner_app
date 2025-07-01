@@ -46,68 +46,56 @@ class _ColorSelectorState extends State<ColorSelector> {
       Colors.grey,
     ];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.title.isNotEmpty) ...[
-                    Text(widget.title),
-                    const SizedBox(height: 8),
-                  ],
+  return SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.title.isNotEmpty) ...[
+          Text(widget.title),
+          const SizedBox(height: 8),
+        ],
 
-                  // プリセット色
-                  Center(
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      alignment: WrapAlignment.center,
-                      children:
-                          presetColors.map((color) {
-                            final isSelected = _currentColor == color;
-                            return GestureDetector(
-                              onTap: () => _onColorChanged(color),
-                              child: CircleAvatar(
-                                backgroundColor: color,
-                                radius: 16,
-                                child:
-                                    isSelected
-                                        ? Icon(
-                                          Icons.check,
-                                          color:
-                                              color.computeLuminance() > 0.5
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                          size: 16,
-                                        )
-                                        : null,
-                              ),
-                            );
-                          }).toList(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // カラーピッカー
-                  ColorPicker(
-                    pickerColor: _currentColor,
-                    onColorChanged: _onColorChanged,
-                    enableAlpha: false,
-                    labelTypes: const [ColorLabelType.rgb],
-                    pickerAreaHeightPercent: 0.8,
-                    portraitOnly: true,
-                  ),
-                ],
-              ),
-            ),
+        // プリセット色
+        Center(
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: presetColors.map((color) {
+              final isSelected = _currentColor == color;
+              return GestureDetector(
+                onTap: () => _onColorChanged(color),
+                child: CircleAvatar(
+                  backgroundColor: color,
+                  radius: 16,
+                  child: isSelected
+                      ? Icon(
+                          Icons.check,
+                          color: color.computeLuminance() > 0.5
+                              ? Colors.black
+                              : Colors.white,
+                          size: 16,
+                        )
+                      : null,
+                ),
+              );
+            }).toList(),
           ),
-        );
-      },
-    );
+        ),
+
+        const SizedBox(height: 16),
+
+        // カラーピッカー
+        ColorPicker(
+          pickerColor: _currentColor,
+          onColorChanged: _onColorChanged,
+          enableAlpha: false,
+          labelTypes: const [ColorLabelType.rgb],
+          pickerAreaHeightPercent: 0.8,
+          portraitOnly: true,
+        ),
+      ],
+    ),
+  );
   }
 }
