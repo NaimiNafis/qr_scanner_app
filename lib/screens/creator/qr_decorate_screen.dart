@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../models/qr_create_data.dart';
 import 'color_selector.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 class QrDecorateScreen extends StatefulWidget {
   final QrCreateData qrData;
@@ -22,6 +23,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
 
   IconData? centerIcon = null;
   String? centerText = null;
+  IconPickerIcon? _selectedIcon;
 
   String? topText;
   String? bottomText;
@@ -133,16 +135,27 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
       ),
       padding: const EdgeInsets.all(32),
       child: Center(
-        child: Container(
-          decoration: decoration,
-          padding: const EdgeInsets.all(16),
-          child: QrImageView(
-            data: widget.qrData.content,
-            version: QrVersions.auto,
-            size: 180,
-            foregroundColor: foregroundColor,
-            backgroundColor: Colors.transparent,
-          ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              decoration: decoration,
+              padding: const EdgeInsets.all(16),
+              child: QrImageView(
+                data: widget.qrData.content,
+                version: QrVersions.auto,
+                size: 180,
+                foregroundColor: foregroundColor,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
+            if (_selectedIcon != null)
+              Icon(
+                _selectedIcon!.data,
+                size: 64, // 必要に応じて調整
+                color: foregroundColor,
+              ),
+          ],
         ),
       ),
     );
@@ -352,38 +365,27 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
   }
 
   Widget _buildIconSelection() {
-    final icons = [
-      Icons.star,
-      Icons.favorite,
-      Icons.android,
-      Icons.pets,
-      Icons.flash_on,
-    ];
-
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Wrap(
-        spacing: 12,
-        children:
-            icons.map((icon) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    centerIcon = icon;
-                    //centerImage = null;
-                    centerText = null;
-                  });
-                },
-                child: CircleAvatar(
-                  radius: 24,
-                  child: Icon(icon, color: Colors.white),
-                  backgroundColor:
-                      centerIcon == icon ? Colors.blue : Colors.grey,
-                ),
-              );
-            }).toList(),
+      child: Center(
+        child: ElevatedButton.icon(
+          onPressed: _pickIcon, // タブを開いたときに即ピッカーを呼ぶ
+          icon: Icon(_selectedIcon?.data ?? Icons.add),
+          label: const Text("アイコンを選ぶ"),
+        ),
       ),
     );
+  }
+
+  Future<void> _pickIcon() async {
+    IconPickerIcon? pickedIcon = await showIconPicker(context);
+
+    if (pickedIcon != null) {
+      // アイコンが選ばれた場合の処理
+      setState(() {
+        _selectedIcon = pickedIcon;
+      });
+    }
   }
 
   /*
