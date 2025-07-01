@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/history_provider.dart';
 import '../utils/app_colors.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   final String content;
   final String type;
   final int? id;
@@ -22,7 +22,23 @@ class ResultScreen extends StatelessWidget {
     this.id,
     this.isFavorite,
   });
+  
+  @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
 
+class _ResultScreenState extends State<ResultScreen> {
+  // Track favorite status locally to update UI
+  bool? _isFavorite;
+  int? _currentId;
+  
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.isFavorite;
+    _currentId = widget.id;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +47,7 @@ class ResultScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         title: Text(
-          type,
+          widget.type,
           style: TextStyle(color: AppColors.textLight),
         ),
         leading: IconButton(
@@ -39,34 +55,38 @@ class ResultScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          TextButton(
+          IconButton(
+            icon: Icon(
+              _currentId != null && _isFavorite == true ? Icons.star : Icons.star_border,
+              color: AppColors.textLight,
+            ),
             onPressed: () {
-              if (id != null) {
-                final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
-                historyProvider.toggleFavorite(id!);
+              final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+              
+              if (_currentId != null) {
+                // Update local state immediately for better UX
+                setState(() {
+                  _isFavorite = !(_isFavorite ?? false);
+                });
+                
+                // Show feedback immediately
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(isFavorite == true 
-                        ? 'Removed from favorites' 
-                        : 'Added to favorites'),
-                    duration: const Duration(seconds: 2),
+                    content: Text(_isFavorite == true 
+                        ? 'Added to favorites' 
+                        : 'Removed from favorites'),
+                    duration: const Duration(seconds: 1),
                   ),
                 );
-                Navigator.pop(context);
+                
+                // Toggle favorite for existing item
+                historyProvider.toggleFavorite(_currentId!);
               } else {
-                // This is a new scan, not yet in history
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Save a scan before adding to favorites'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+                // This is a new scan, save it and mark as favorite
+                _saveAndFavorite(historyProvider);
               }
             },
-            child: Text(
-              id != null && isFavorite == true ? 'Remove favorite' : 'Save as Favorites',
-              style: TextStyle(color: AppColors.textLight),
-            ),
+            tooltip: _currentId != null && _isFavorite == true ? 'Remove from favorites' : 'Add to favorites',
           ),
         ],
       ),
@@ -77,7 +97,7 @@ class ResultScreen extends StatelessWidget {
           children: [
             // Content type heading
             Text(
-              type,
+              widget.type,
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
@@ -110,7 +130,7 @@ class ResultScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Icon(
-                      _getIconForType(type),
+                      _getIconForType(widget.type),
                       size: 36,
                     ),
                   ),
@@ -120,14 +140,14 @@ class ResultScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          type,
+                          widget.type,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          content,
+                          widget.content,
                           style: const TextStyle(fontSize: 16),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -140,7 +160,7 @@ class ResultScreen extends StatelessWidget {
             ),
             
             // Safety check for URLs
-            if (type == 'URL')
+            if (widget.type == 'URL')
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.all(15),
@@ -186,12 +206,12 @@ class ResultScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // OPEN button (for URLs)
-                  if (type == 'URL' || type == 'Youtube')
+                  if (widget.type == 'URL' || widget.type == 'Youtube')
                     _buildActionButton(
                       context: context,
                       icon: Icons.chevron_right,
                       text: 'OPEN',
-                      onTap: () => _launchURL(content),
+                      onTap: () => _launchURL(widget.content),
                     ),
                   
                   const SizedBox(height: 15),
@@ -202,7 +222,7 @@ class ResultScreen extends StatelessWidget {
                     icon: Icons.copy,
                     text: 'COPY',
                     onTap: () {
-                      Clipboard.setData(ClipboardData(text: content));
+                      Clipboard.setData(ClipboardData(text: widget.content));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Content copied to clipboard')),
                       );
@@ -218,7 +238,7 @@ class ResultScreen extends StatelessWidget {
                     text: 'SHARE',
                     onTap: () {
                       SharePlus.instance.share(
-                        ShareParams(text: content),
+                        ShareParams(text: widget.content),
                       );
                     },
                   ),
@@ -304,5 +324,43 @@ class ResultScreen extends StatelessWidget {
       // Handle error
       debugPrint('Could not launch $url');
     }
+  }
+
+  void _saveAndFavorite(HistoryProvider historyProvider) {
+    // Show feedback immediately
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saving and adding to favorites...'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    
+    // Start saving process
+    historyProvider.addQRCode(widget.content, widget.type).then((_) {
+      // Find the newly added QR code to mark it as favorite
+      historyProvider.fetchHistory().then((_) {
+        // Get the latest added item (should be at the beginning of the list)
+        final latestItems = historyProvider.history
+            .where((item) => item.content == widget.content && item.type == widget.type)
+            .toList();
+        
+        if (latestItems.isNotEmpty && mounted) {
+          // Sort by timestamp to get the most recent one
+          latestItems.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+          final latestItem = latestItems.first;
+          
+          // Update UI immediately
+          setState(() {
+            _currentId = latestItem.id;
+            _isFavorite = true;
+          });
+          
+          // Toggle favorite in database
+          if (latestItem.id != null) {
+            historyProvider.toggleFavorite(latestItem.id!);
+          }
+        }
+      });
+    });
   }
 } 
