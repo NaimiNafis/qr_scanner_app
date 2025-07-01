@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../providers/history_provider.dart';
+import '../providers/theme_provider.dart';
 import '../utils/app_colors.dart';
 import 'result_screen.dart';
 
@@ -54,6 +55,8 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -63,9 +66,9 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
         actions: [
           IconButton(
             color: AppColors.textLight,
-            icon: const Icon(Icons.settings),
+            icon: Icon(themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode),
             onPressed: () {
-              // Open settings (to be implemented)
+              themeProvider.toggleTheme();
             },
           ),
         ],
