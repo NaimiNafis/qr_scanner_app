@@ -8,7 +8,7 @@ import '../utils/app_colors.dart';
 import 'result_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  const HistoryScreen({Key? key}) : super(key: key);
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();

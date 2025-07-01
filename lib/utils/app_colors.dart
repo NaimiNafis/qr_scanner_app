@@ -17,5 +17,5 @@ class AppColors {
   // UI Element colors
   static final Color cardBackground = Colors.white;
   static final Color divider = Colors.brown.shade200;
-  static final Color shadow = Colors.grey.withAlpha(51);
+  static final Color shadow = Colors.grey.withOpacity(0.2);
 }  
