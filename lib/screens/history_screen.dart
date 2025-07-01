@@ -139,13 +139,49 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
       child: Dismissible(
         key: Key(item.id.toString()),
         background: Container(
+          color: AppColors.accent,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 20),
+          child: Icon(
+            item.isFavorite ? Icons.star_border : Icons.star,
+            color: Colors.white,
+          ),
+        ),
+        secondaryBackground: Container(
           color: AppColors.error,
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
           child: const Icon(Icons.delete, color: Colors.white),
         ),
-        direction: DismissDirection.endToStart,
+        direction: DismissDirection.horizontal,
+        confirmDismiss: (direction) async {
+          if (direction == DismissDirection.startToEnd) {
+            // Handle favorite toggle
+            if (item.id != null) {
+              await Provider.of<HistoryProvider>(context, listen: false)
+                  .toggleFavorite(item.id!);
+              
+              // Show confirmation message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    item.isFavorite
+                        ? 'Removed from favorites'
+                        : 'Added to favorites',
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            }
+            // Return false so the item is not dismissed
+            return false;
+          } else {
+            // For endToStart (delete), return true to proceed with dismissal
+            return true;
+          }
+        },
         onDismissed: (direction) {
+          // This will only be called for endToStart (delete) swipes
           if (item.id != null) {
             Provider.of<HistoryProvider>(context, listen: false)
                 .deleteQRCode(item.id!);
