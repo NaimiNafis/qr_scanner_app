@@ -147,7 +147,7 @@ class ResultScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.success, width: 2),
                   borderRadius: BorderRadius.circular(15),
-                  color: AppColors.success.withAlpha(13),
+                  color: AppColors.success.withValues(alpha: 255 * 0.05),
                 ),
                 child: Row(
                   children: [
@@ -217,7 +217,9 @@ class ResultScreen extends StatelessWidget {
                     icon: Icons.share,
                     text: 'SHARE',
                     onTap: () {
-                      SharePlus.instance.share(ShareParams(text: content));
+                      SharePlus.instance.share(
+                        ShareParams(text: content),
+                      );
                     },
                   ),
                 ],
