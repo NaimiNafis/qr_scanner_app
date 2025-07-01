@@ -2,20 +2,30 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static final Color primary = Colors.brown.shade800;
-  static final Color primaryLight = Colors.brown.shade600;
-  static final Color background = Colors.brown.shade50;
-  static final Color success = Colors.green;
-  static final Color error = Colors.red;
-  static final Color accent = Colors.amber.shade700;
+  static bool _isDarkMode = false;
+  
+  // Method to update the theme mode
+  static void setDarkMode(bool isDarkMode) {
+    _isDarkMode = isDarkMode;
+  }
+  
+  // Primary colors
+  static Color get primary => _isDarkMode ? Colors.brown.shade900 : Colors.brown.shade800;
+  static Color get primaryLight => _isDarkMode ? Colors.brown.shade800 : Colors.brown.shade600;
+  static Color get background => _isDarkMode ? Colors.grey.shade900 : Colors.brown.shade50;
+  static Color get success => Colors.green;
+  static Color get error => Colors.red;
+  static Color get accent => Colors.amber.shade700;
   
   // Text colors
-  static final Color textDark = Colors.brown.shade900;
-  static final Color textLight = Colors.brown.shade50;
-  static final Color textMuted = Colors.brown.shade300;
+  static Color get textDark => _isDarkMode ? Colors.grey.shade300 : Colors.brown.shade900;
+  static Color get textLight => _isDarkMode ? Colors.white : Colors.brown.shade50;
+  static Color get textMuted => _isDarkMode ? Colors.grey.shade500 : Colors.brown.shade300;
   
   // UI Element colors
-  static final Color cardBackground = Colors.white;
-  static final Color divider = Colors.brown.shade200;
-  static final Color shadow = Colors.grey.withValues(alpha: 255 * 0.2);
+  static Color get cardBackground => _isDarkMode ? Colors.grey.shade800 : Colors.white;
+  static Color get divider => _isDarkMode ? Colors.grey.shade700 : Colors.brown.shade200;
+  static Color get shadow => _isDarkMode ? 
+                             Colors.black.withValues(alpha: 255 * 0.3) : 
+                             Colors.grey.withValues(alpha: 255 * 0.2);
 }  

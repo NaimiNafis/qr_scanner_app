@@ -43,6 +43,33 @@ class HistoryProvider extends ChangeNotifier {
     await _dbHelper.deleteQRCode(id);
     await fetchHistory();
   }
+
+  Future<void> deleteMultipleQRCodes(List<int> ids) async {
+    await _dbHelper.deleteMultipleQRCodes(ids);
+    await fetchHistory();
+  }
+
+  Future<void> toggleFavoriteMultiple(List<int> ids, bool makeFavorite) async {
+    for (int id in ids) {
+      final code = _history.firstWhere(
+        (element) => element.id == id,
+        orElse: () => throw Exception('QR Code not found'),
+      );
+      
+      // Only update if the favorite status is different
+      if (code.isFavorite != makeFavorite) {
+        final updatedCode = QRCodeModel(
+          id: code.id,
+          content: code.content,
+          type: code.type,
+          isFavorite: makeFavorite,
+          timestamp: code.timestamp,
+        );
+        await _dbHelper.updateQRCode(updatedCode);
+      }
+    }
+    await fetchHistory();
+  }
 }
 
 // Manages history/favorites state and logic

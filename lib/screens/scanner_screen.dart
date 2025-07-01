@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../providers/history_provider.dart';
+import '../providers/theme_provider.dart';
 import '../utils/app_colors.dart';
 import 'result_screen.dart';
 
@@ -15,13 +16,47 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> {
-  final MobileScannerController controller = MobileScannerController();
+class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserver {
+  late MobileScannerController controller;
   bool isFlashlightOn = false;
   bool isQrMode = true; // true for QR, false for barcode
+  bool isScanning = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controller with all formats
+    controller = MobileScannerController(
+      detectionSpeed: DetectionSpeed.normal,
+    );
+    
+    // Register this object as an observer to detect app lifecycle changes
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Handle app lifecycle changes
+    if (state == AppLifecycleState.resumed) {
+      controller.start();
+    } else if (state == AppLifecycleState.paused) {
+      controller.stop();
+    }
+  }
+
+  // Filter barcodes based on selected mode
+  bool _shouldProcessBarcode(Barcode barcode) {
+    if (isQrMode) {
+      return barcode.format == BarcodeFormat.qrCode;
+    } else {
+      return barcode.format != BarcodeFormat.qrCode;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -31,9 +66,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
         actions: [
           IconButton(
             color: AppColors.textLight,
-            icon: const Icon(Icons.settings),
+            icon: Icon(themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode),
             onPressed: () {
-              // Open settings (to be implemented)
+              themeProvider.toggleTheme();
             },
           ),
         ],
@@ -50,11 +85,17 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   controller: controller,
                   onDetect: (capture) {
                     final List<Barcode> barcodes = capture.barcodes;
-                    if (barcodes.isNotEmpty) {
+                    
+                    // Filter barcodes based on selected mode
+                    final matchingBarcodes = barcodes.where(_shouldProcessBarcode).toList();
+                    
+                    if (matchingBarcodes.isNotEmpty && isScanning) {
                       // Stop scanning temporarily to prevent multiple scans
-                      controller.stop();
+                      setState(() {
+                        isScanning = false;
+                      });
                       
-                      final String code = barcodes.first.rawValue ?? '';
+                      final String code = matchingBarcodes.first.rawValue ?? '';
                       
                       // Determine the type based on content heuristics
                       String type = _determineContentType(code);
@@ -74,7 +115,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         ),
                       ).then((_) {
                         // Resume scanning when returning from result screen
-                        controller.start();
+                        setState(() {
+                          isScanning = true;
+                        });
                       });
                     }
                   },
@@ -170,7 +213,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   label: 'Creator',
                   isActive: false,
                   onTap: () {
-                    Navigator.pushNamed(context, '/creator');
+                    // Stop scanning when navigating away
+                    controller.stop();
+                    Navigator.pushNamed(context, '/creator').then((_) {
+                      // Resume scanning when returning to this screen
+                      controller.start();
+                    });
                   },
                 ),
                 
@@ -180,7 +228,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   label: 'History',
                   isActive: false,
                   onTap: () {
-                    Navigator.pushNamed(context, '/history');
+                    // Stop scanning when navigating away
+                    controller.stop();
+                    Navigator.pushNamed(context, '/history').then((_) {
+                      // Resume scanning when returning to this screen
+                      controller.start();
+                    });
                   },
                 ),
               ],
@@ -239,6 +292,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   @override
   void dispose() {
+    // Clean up observers and controller
+    WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
   }
