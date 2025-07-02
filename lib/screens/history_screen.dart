@@ -348,13 +348,13 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
         // Add/remove favorite
         if (_showFavoritesOnly)
           IconButton(
-            icon: Icon(Icons.star_border, color: AppColors.textLight),
+            icon: Icon(Icons.star_border, color: AppColors.starYellow),
             onPressed: () => _toggleFavoriteSelected(false),
             tooltip: 'Remove from favorites',
           )
         else
           IconButton(
-            icon: Icon(Icons.star, color: AppColors.textLight),
+            icon: Icon(Icons.star, color: AppColors.starYellow),
             onPressed: () => _toggleFavoriteSelected(true),
             tooltip: 'Add to favorites',
           ),
@@ -397,7 +397,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
       child: Dismissible(
         key: Key(item.id.toString()),
         background: Container(
-          color: AppColors.accent,
+          color: AppColors.starYellow,
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(left: 20),
           child: Icon(
@@ -478,7 +478,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                 ? IconButton(
                     icon: Icon(
                       item.isFavorite ? Icons.star : Icons.star_border,
-                      color: item.isFavorite ? AppColors.accent : AppColors.textMuted,
+                      color: item.isFavorite ? AppColors.starYellow : AppColors.textMuted,
                     ),
                     onPressed: () {
                       if (item.id != null) {
