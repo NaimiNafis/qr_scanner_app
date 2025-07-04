@@ -16,15 +16,20 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserver {
+class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   late MobileScannerController controller;
   bool isFlashlightOn = false;
   bool isQrMode = true; // true for QR, false for barcode
   bool isScanning = true;
+  bool _isInitialized = false;
+
+  @override
+  bool get wantKeepAlive => true; // Keep this screen alive
 
   @override
   void initState() {
     super.initState();
+    
     // Initialize controller with all formats
     controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.normal,
@@ -32,6 +37,13 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
     
     // Register this object as an observer to detect app lifecycle changes
     WidgetsBinding.instance.addObserver(this);
+    
+    // Allow the frame to be drawn before initializing camera
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _isInitialized = true;
+      });
+    });
   }
 
   @override
@@ -55,6 +67,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     final themeProvider = Provider.of<ThemeProvider>(context);
     
     return Scaffold(
@@ -62,7 +75,8 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        title: Text('Scanner', style: TextStyle(color: AppColors.textLight)),
+        title: Text('Scan', style: TextStyle(color: AppColors.textLight)),
+        automaticallyImplyLeading: false, // Prevent automatic back button
         actions: [
           IconButton(
             color: AppColors.textLight,
@@ -80,50 +94,64 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Scanner view
-                MobileScanner(
-                  controller: controller,
-                  onDetect: (capture) {
-                    final List<Barcode> barcodes = capture.barcodes;
-                    
-                    // Filter barcodes based on selected mode
-                    final matchingBarcodes = barcodes.where(_shouldProcessBarcode).toList();
-                    
-                    if (matchingBarcodes.isNotEmpty && isScanning) {
-                      // Stop scanning temporarily to prevent multiple scans
-                      setState(() {
-                        isScanning = false;
-                      });
-                      
-                      final String code = matchingBarcodes.first.rawValue ?? '';
-                      
-                      // Determine the type based on content heuristics
-                      String type = _determineContentType(code);
-                      
-                      // Add to history
-                      final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
-                      historyProvider.addQRCode(code, type);
-                      
-                      // Navigate to results screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResultScreen(
-                            content: code,
-                            type: type,
+                // Scanner view or loading indicator
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: _isInitialized 
+                    ? MobileScanner(
+                        key: const ValueKey('scanner-active'),
+                        controller: controller,
+                        onDetect: (capture) {
+                          final List<Barcode> barcodes = capture.barcodes;
+                          
+                          // Filter barcodes based on selected mode
+                          final matchingBarcodes = barcodes.where(_shouldProcessBarcode).toList();
+                          
+                          if (matchingBarcodes.isNotEmpty && isScanning) {
+                            // Stop scanning temporarily to prevent multiple scans
+                            setState(() {
+                              isScanning = false;
+                            });
+                            
+                            final String code = matchingBarcodes.first.rawValue ?? '';
+                            
+                            // Determine the type based on content heuristics
+                            String type = _determineContentType(code);
+                            
+                            // Add to history
+                            final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+                            historyProvider.addQRCode(code, type);
+                            
+                            // Navigate to results screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultScreen(
+                                  content: code,
+                                  type: type,
+                                ),
+                              ),
+                            ).then((_) {
+                              // Resume scanning when returning from result screen
+                              setState(() {
+                                isScanning = true;
+                              });
+                            });
+                          }
+                        },
+                      )
+                    : Container(
+                        key: const ValueKey('scanner-loading'),
+                        color: AppColors.background,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary,
                           ),
                         ),
-                      ).then((_) {
-                        // Resume scanning when returning from result screen
-                        setState(() {
-                          isScanning = true;
-                        });
-                      });
-                    }
-                  },
+                      ),
                 ),
                 
-                // Scan frame
+                // Scan frame is always visible, even during loading
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -190,79 +218,6 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                   ),
                 ),
               ],
-            ),
-          ),
-          
-          // Bottom navigation bar
-          Container(
-            color: AppColors.primary,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Scan button (current screen)
-                _buildBottomButton(
-                  icon: Icons.crop_free,
-                  label: 'Scan',
-                  isActive: true,
-                ),
-                
-                // Creator button (navigates to creator screen)
-                _buildBottomButton(
-                  icon: Icons.qr_code_2,
-                  label: 'Creator',
-                  isActive: false,
-                  onTap: () {
-                    // Stop scanning when navigating away
-                    controller.stop();
-                    Navigator.pushNamed(context, '/creator').then((_) {
-                      // Resume scanning when returning to this screen
-                      controller.start();
-                    });
-                  },
-                ),
-                
-                // History button
-                _buildBottomButton(
-                  icon: Icons.history,
-                  label: 'History',
-                  isActive: false,
-                  onTap: () {
-                    // Stop scanning when navigating away
-                    controller.stop();
-                    Navigator.pushNamed(context, '/history').then((_) {
-                      // Resume scanning when returning to this screen
-                      controller.start();
-                    });
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-  
-  Widget _buildBottomButton({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? AppColors.textLight : AppColors.textMuted,
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              color: isActive ? AppColors.textLight : AppColors.textMuted,
             ),
           ),
         ],

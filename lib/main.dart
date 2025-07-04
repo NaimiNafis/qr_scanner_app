@@ -6,6 +6,7 @@ import 'package:qr_scanner_app/screens/scanner_screen.dart';
 import 'package:qr_scanner_app/screens/history_screen.dart';
 import 'package:qr_scanner_app/screens/creator/creator_screen.dart';
 import 'package:qr_scanner_app/utils/app_colors.dart';
+import 'package:qr_scanner_app/widgets/bottom_nav_bar.dart';
 
 // Main entry point for the app
 // Sets up provider for state management and configures the app theme
@@ -42,11 +43,74 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: themeProvider.isDarkMode ? Brightness.dark : Brightness.light,
       ),
-      home: const ScannerScreen(),
+      home: const MainNavigationScreen(),
       routes: {
-        '/history': (context) => const HistoryScreen(),
-        '/creator': (context) => const CreatorScreen(),
+        '/result': (context) => const ScannerScreen(),
       },
+    );
+  }
+}
+
+class MainNavigationScreen extends StatefulWidget {
+  const MainNavigationScreen({super.key});
+
+  @override
+  State<MainNavigationScreen> createState() => MainNavigationScreenState();
+}
+
+class MainNavigationScreenState extends State<MainNavigationScreen> {
+  int _currentIndex = 0;
+  
+  // Screen names for the bottom nav bar
+  final List<String> _screenNames = ['scan', 'creator', 'history'];
+  
+  void _changeScreen(int index) {
+    if (_currentIndex == index) return; // Don't rebuild if already on this screen
+    
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    // Listen to theme changes to ensure all screens update
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    // Update AppColors with current theme mode to ensure consistency
+    AppColors.setDarkMode(themeProvider.isDarkMode);
+    
+    // Determine which screen to show
+    Widget currentScreen;
+    switch (_currentIndex) {
+      case 0:
+        currentScreen = const ScannerScreen(key: ValueKey('scanner'));
+        break;
+      case 1:
+        currentScreen = const CreatorScreen(key: ValueKey('creator'));
+        break;
+      case 2:
+        currentScreen = const HistoryScreen(key: ValueKey('history'));
+        break;
+      default:
+        currentScreen = const ScannerScreen(key: ValueKey('scanner'));
+    }
+    
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          // Use fade transition instead of default slide transition
+          return FadeTransition(opacity: animation, child: child);
+        },
+        child: currentScreen,
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentScreen: _screenNames[_currentIndex],
+        onScanTap: () => _changeScreen(0),
+        onCreatorTap: () => _changeScreen(1),
+        onHistoryTap: () => _changeScreen(2),
+      ),
     );
   }
 }

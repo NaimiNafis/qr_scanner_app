@@ -16,8 +16,13 @@ Future<String> captureAndSave(
       throw Exception("RepaintBoundaryが見つかりません");
     }
 
+    final BuildContext? context = repaintKey.currentContext;
+    final double pixelRatio = context != null 
+        ? MediaQuery.of(context).devicePixelRatio 
+        : 1.0;
+
     final ui.Image image = await boundary.toImage(
-      pixelRatio: ui.window.devicePixelRatio,
+      pixelRatio: pixelRatio,
     );
     final ByteData? byteData = await image.toByteData(
       format: ui.ImageByteFormat.png,

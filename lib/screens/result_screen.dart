@@ -58,7 +58,7 @@ class _ResultScreenState extends State<ResultScreen> {
           IconButton(
             icon: Icon(
               _currentId != null && _isFavorite == true ? Icons.star : Icons.star_border,
-              color: AppColors.textLight,
+              color: _currentId != null && _isFavorite == true ? AppColors.starYellow : AppColors.textLight,
             ),
             onPressed: () {
               final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
