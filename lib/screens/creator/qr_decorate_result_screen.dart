@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/qr_create_data.dart';
 import '../../models/qr_decoration_settings.dart';
 import '../../widgets/qr_preview_widget.dart';
-//import '../../widgets/save_qr_as_image.dart';
 import '../../utils/qr_capture_util.dart';
 
 class QrDecorateResultScreen extends StatelessWidget {
