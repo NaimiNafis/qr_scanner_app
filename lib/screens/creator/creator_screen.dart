@@ -1,9 +1,6 @@
 // The view for creating QR codes
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../widgets/bottom_nav_bar.dart';
-import '../../providers/theme_provider.dart';
 import '../../utils/app_colors.dart';
 import 'qr_input_screen.dart';
 
@@ -12,7 +9,7 @@ class CreatorScreen extends StatelessWidget {
     {
       'type': 'URL',
       'icon': Icons.link,
-      'example': 'e.g., https://example.com',
+      'example': 'e.g., https://kit-isel.github.io/',
       'tooltip': 'Create QR codes that open websites or web apps when scanned'
     },
     {
@@ -24,13 +21,13 @@ class CreatorScreen extends StatelessWidget {
     {
       'type': 'Phone Number',
       'icon': Icons.phone,
-      'example': 'e.g., +1 234 567 8900',
+      'example': 'e.g., +81 90 1234 5678',
       'tooltip': 'Generate a QR code that opens the phone dialer when scanned'
     },
     {
       'type': 'Wi-Fi',
       'icon': Icons.wifi,
-      'example': 'e.g., Network name & password',
+      'example': 'e.g., Network name (SSID) & password',
       'tooltip': 'Share Wi-Fi credentials via QR code for easy connection'
     },
   ];
@@ -39,21 +36,19 @@ class CreatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to theme provider to ensure UI updates properly
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text('Create QR Code', style: TextStyle(color: AppColors.textLight)),
+        title: Text('Creator', style: TextStyle(color: AppColors.textLight)),
         automaticallyImplyLeading: false,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Instruction header
-          Padding(
+          Container(
+            width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
               'Select a QR code type to create',
@@ -62,6 +57,7 @@ class CreatorScreen extends StatelessWidget {
                 color: AppColors.textDark,
                 fontWeight: FontWeight.w500,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
           // Grid of options
@@ -72,6 +68,9 @@ class CreatorScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: 16.0,
                 crossAxisSpacing: 16.0,
+                childAspectRatio: 0.85,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
                 children: qrTypes.map((typeInfo) {
                   return _buildTypeCard(
                     context,
@@ -120,30 +119,36 @@ class CreatorScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    icon,
-                    size: 40,
-                    color: AppColors.primary,
+                  Center(
+                    child: Icon(
+                      icon,
+                      size: 40,
+                      color: AppColors.primary,
+                    ),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    type,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textDark,
+                  Center(
+                    child: Text(
+                      type,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    example,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontStyle: FontStyle.italic,
-                      color: AppColors.textMuted,
+                  Center(
+                    child: Text(
+                      example,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontStyle: FontStyle.italic,
+                        color: AppColors.textMuted,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

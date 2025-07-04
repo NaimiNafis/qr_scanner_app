@@ -213,7 +213,14 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                 data: widget.qrData.content,
                 version: QrVersions.auto,
                 size: 180,
-                foregroundColor: foregroundColor,
+                eyeStyle: QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: foregroundColor,
+                ),
+                dataModuleStyle: QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: foregroundColor,
+                ),
                 backgroundColor: Colors.transparent,
                 embeddedImage: _embeddedIconImage,
                 embeddedImageStyle: const QrEmbeddedImageStyle(
@@ -482,7 +489,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                   //color: selectedIconBackgroundColor,
                   color:
                       isSelected
-                          ? Colors.blueAccent.withOpacity(0.2)
+                          ? Colors.blueAccent.withValues(alpha: 51) // 0.2 * 255 = 51
                           : Colors.transparent,
                   border: Border.all(
                     color:

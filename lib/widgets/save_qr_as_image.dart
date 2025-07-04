@@ -107,8 +107,14 @@ Future<String> saveQrAsImage({
   final qrPainter = QrPainter(
     data: qrData.content,
     version: QrVersions.auto,
-    color: settings.foregroundColor,
-    emptyColor: Colors.transparent,
+    eyeStyle: QrEyeStyle(
+      eyeShape: QrEyeShape.square,
+      color: settings.foregroundColor,
+    ),
+    dataModuleStyle: QrDataModuleStyle(
+      dataModuleShape: QrDataModuleShape.square,
+      color: settings.foregroundColor,
+    ),
     gapless: true,
     errorCorrectionLevel: QrErrorCorrectLevel.H,
   );

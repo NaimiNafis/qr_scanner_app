@@ -5,9 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/history_provider.dart';
 import '../models/qr_code_model.dart';
 import '../utils/app_colors.dart';
-import '../widgets/bottom_nav_bar.dart';
-import 'result_screen.dart';
 import '../providers/theme_provider.dart';
+import 'result_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -232,8 +231,8 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
   
   @override
   Widget build(BuildContext context) {
-    // Listen to theme provider to ensure UI updates properly
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    // Access theme provider but use it with AppColors
+    Provider.of<ThemeProvider>(context);
     
     return Scaffold(
       backgroundColor: AppColors.background,

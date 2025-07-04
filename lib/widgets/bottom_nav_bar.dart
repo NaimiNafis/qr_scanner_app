@@ -8,12 +8,12 @@ class BottomNavBar extends StatelessWidget {
   final Function? onHistoryTap;
 
   const BottomNavBar({
-    Key? key,
+    super.key,
     required this.currentScreen,
     this.onScanTap,
     this.onCreatorTap,
     this.onHistoryTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

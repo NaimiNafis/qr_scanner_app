@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../providers/history_provider.dart';
 import '../providers/theme_provider.dart';
 import '../utils/app_colors.dart';
-import '../widgets/bottom_nav_bar.dart';
 import 'result_screen.dart';
 
 class ScannerScreen extends StatefulWidget {
@@ -219,32 +218,6 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  Widget _buildBottomButton({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? AppColors.textLight : AppColors.textMuted,
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              color: isActive ? AppColors.textLight : AppColors.textMuted,
             ),
           ),
         ],
