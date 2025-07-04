@@ -496,7 +496,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                   //color: selectedIconBackgroundColor,
                   color:
                       isSelected
-                          ? Colors.blueAccent.withOpacity(0.2)
+                          ? Colors.blueAccent.withValues(alpha: 51) // 0.2 * 255 = 51
                           : Colors.transparent,
                   border: Border.all(
                     color:

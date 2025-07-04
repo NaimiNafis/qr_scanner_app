@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/history_provider.dart';
 import '../models/qr_code_model.dart';
 import '../utils/app_colors.dart';
+import '../providers/theme_provider.dart';
 import 'result_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -230,6 +231,9 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
   
   @override
   Widget build(BuildContext context) {
+    // Access theme provider but use it with AppColors
+    Provider.of<ThemeProvider>(context);
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: _inSelectionMode 
@@ -301,10 +305,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
         'History',
         style: TextStyle(fontSize: 24, color: AppColors.textLight),
       ),
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: AppColors.textLight),
-        onPressed: () => Navigator.pop(context),
-      ),
+      automaticallyImplyLeading: false,
       bottom: TabBar(
         controller: _tabController,
         tabs: const [
@@ -348,13 +349,13 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
         // Add/remove favorite
         if (_showFavoritesOnly)
           IconButton(
-            icon: Icon(Icons.star_border, color: AppColors.textLight),
+            icon: Icon(Icons.star_border, color: AppColors.starYellow),
             onPressed: () => _toggleFavoriteSelected(false),
             tooltip: 'Remove from favorites',
           )
         else
           IconButton(
-            icon: Icon(Icons.star, color: AppColors.textLight),
+            icon: Icon(Icons.star, color: AppColors.starYellow),
             onPressed: () => _toggleFavoriteSelected(true),
             tooltip: 'Add to favorites',
           ),
@@ -397,7 +398,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
       child: Dismissible(
         key: Key(item.id.toString()),
         background: Container(
-          color: AppColors.accent,
+          color: AppColors.starYellow,
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(left: 20),
           child: Icon(
@@ -478,7 +479,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                 ? IconButton(
                     icon: Icon(
                       item.isFavorite ? Icons.star : Icons.star_border,
-                      color: item.isFavorite ? AppColors.accent : AppColors.textMuted,
+                      color: item.isFavorite ? AppColors.starYellow : AppColors.textMuted,
                     ),
                     onPressed: () {
                       if (item.id != null) {
