@@ -196,7 +196,7 @@ class _ScannerScreenState extends State<ScannerScreen> with WidgetsBindingObserv
           // Bottom navigation bar
           Container(
             color: AppColors.primary,
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 40), // Added more padding to raise the bar and protect from accidental iPhone home bar touches
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
