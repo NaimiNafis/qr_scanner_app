@@ -7,7 +7,6 @@ class QrDecorationSettings {
   final String pixelShape;
   final String backgroundStyle;
   final IconData? centerIcon;
-  final ImageProvider<Object>? embeddedIcon;
   final Color iconColor;
   final Color iconBackgroundColor;
   final String? topText;
@@ -22,7 +21,6 @@ class QrDecorationSettings {
     required this.pixelShape,
     required this.backgroundStyle,
     required this.centerIcon,
-    required this.embeddedIcon,
     required this.iconColor,
     required this.iconBackgroundColor,
     required this.topText,

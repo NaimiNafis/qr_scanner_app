@@ -1,4 +1,3 @@
-//import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../models/qr_create_data.dart';
@@ -37,17 +36,6 @@ class QrPreviewWidget extends StatelessWidget {
       decoration = BoxDecoration(color: settings.backgroundColor);
     }
 
-    // 埋め込み画像の優先順位（embeddedIcon > embeddedImage）
-    ImageProvider<Object>? getEmbeddedImage() {
-      if (settings.embeddedIcon != null) {
-        return settings.embeddedIcon;
-      }
-      if (settings.embeddedImage != null) {
-        return FileImage(settings.embeddedImage!);
-      }
-      return null;
-    }
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -55,24 +43,70 @@ class QrPreviewWidget extends StatelessWidget {
         if (settings.topText != null && settings.topText!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: Text(settings.topText!, style: settings.topLabelStyle),
+            child: Center(
+              child: Text(
+                settings.topText!,
+                style: settings.topLabelStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
 
-        // QRコード本体
+        // QRコード本体 + 中央Icon（Stackで重ねる）
         Container(
           padding: const EdgeInsets.all(16),
           decoration: decoration,
-          child: QrImageView(
-            data: qrData.content,
-            version: QrVersions.auto,
-            size: 200,
-            foregroundColor: settings.foregroundColor,
-            backgroundColor: Colors.transparent,
-            embeddedImage: getEmbeddedImage(),
-            embeddedImageStyle: const QrEmbeddedImageStyle(
-              size: Size(48, 48),
+          child: SizedBox(
+            width: 200,
+            height: 200,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                QrImageView(
+                  data: qrData.content,
+                  version: QrVersions.auto,
+                  size: 200,
+                  foregroundColor: settings.foregroundColor,
+                  backgroundColor: Colors.transparent,
+                  errorCorrectionLevel: QrErrorCorrectLevel.H,
+                  eyeStyle: QrEyeStyle(
+                    eyeShape: parseEyeShape(settings.pixelShape),
+                    color: settings.foregroundColor,
+                  ),
+                  dataModuleStyle: QrDataModuleStyle(
+                    dataModuleShape: parseDataShape(settings.pixelShape),
+                    color: settings.foregroundColor,
+                  ),
+                ),
+
+                // 中央アイコン（Widgetとして重ねる）
+                if (settings.embeddedImage != null)
+                  SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Image.file(settings.embeddedImage!),
+                    ),
+                  )
+                else if (settings.centerIcon != null)
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: settings.iconBackgroundColor,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        settings.centerIcon,
+                        color: settings.iconColor,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            errorCorrectionLevel: QrErrorCorrectLevel.H,
           ),
         ),
 
@@ -80,9 +114,37 @@ class QrPreviewWidget extends StatelessWidget {
         if (settings.bottomText != null && settings.bottomText!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text(settings.bottomText!, style: settings.bottomLabelStyle),
+            child: Center(
+              child: Text(
+                settings.bottomText!,
+                style: settings.bottomLabelStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
       ],
     );
+  }
+
+  /// ピクセル形状に対応する EyeShape を返す（仮）
+  QrEyeShape parseEyeShape(String shape) {
+    switch (shape) {
+      case 'circle':
+        return QrEyeShape.circle;
+      case 'square':
+      default:
+        return QrEyeShape.square;
+    }
+  }
+
+  /// ピクセル形状に対応する DataModuleShape を返す（仮）
+  QrDataModuleShape parseDataShape(String shape) {
+    switch (shape) {
+      case 'circle':
+        return QrDataModuleShape.circle;
+      case 'square':
+      default:
+        return QrDataModuleShape.square;
+    }
   }
 }
