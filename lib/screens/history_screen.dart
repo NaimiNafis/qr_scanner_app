@@ -1,3 +1,8 @@
+// This file re-exports the refactored history screen
+// for backwards compatibility
+
+export 'history/history_screen.dart';
+
 // The view for showing history/favorites
 
 import 'package:flutter/material.dart';
@@ -6,7 +11,7 @@ import '../providers/history_provider.dart';
 import '../models/qr_code_model.dart';
 import '../utils/app_colors.dart';
 import '../providers/theme_provider.dart';
-import 'result_screen.dart';
+import 'result/result_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -502,13 +507,10 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
       case 'URL':
         iconData = Icons.link;
         break;
-      case 'Youtube':
-        iconData = Icons.play_circle_fill;
-        break;
       case 'WI-FI':
         iconData = Icons.wifi;
         break;
-      case 'Contacts':
+      case 'CONTACTS':
         iconData = Icons.person;
         break;
       case 'PRODUCT':

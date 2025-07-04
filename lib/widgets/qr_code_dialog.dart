@@ -1,1 +1,0 @@
-// A dialog to show after scanning a QR code
