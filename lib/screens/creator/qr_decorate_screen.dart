@@ -5,10 +5,9 @@ import '../../models/qr_decoration_settings.dart';
 import 'color_selector.dart';
 import 'qr_decorate_result_screen.dart';
 import 'package:flutter/cupertino.dart';
-//import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class QrDecorateScreen extends StatefulWidget {
   final QrCreateData qrData;
@@ -29,12 +28,9 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
   String selectedPixelShape = 'square';
   String backgroundStyle = "normal";
 
-  IconData? centerIcon;
-  //String? centerText;
   IconData? _selectedIcon;
   Color selectedIconColor = Colors.black;
   Color selectedIconBackgroundColor = Colors.white;
-  MemoryImage? _embeddedIconImage;
   File? _selectedImage;
 
   String? topText;
@@ -43,16 +39,17 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
   late TextEditingController _bottomTextController;
   String _tempTopText = "";
   String _tempBottomText = "";
+
   TextStyle topLabelStyle = const TextStyle(
-    fontSize: 16,
-    color: Colors.black,
-    fontFamily: 'Roboto',
-  );
+    fontSize: 16, 
+    color: Colors.black
+    );
+  String selectedTopFont = 'Roboto';
   TextStyle bottomLabelStyle = const TextStyle(
     fontSize: 16,
     color: Colors.black,
-    fontFamily: 'Roboto',
   );
+  String selectedBottomFont = 'Roboto';
 
   @override
   void initState() {
@@ -138,8 +135,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
       backgroundColor: backgroundColor,
       pixelShape: selectedPixelShape,
       backgroundStyle: backgroundStyle,
-      centerIcon: centerIcon,
-      embeddedIcon: _embeddedIconImage,
+      centerIcon: _selectedIcon,
       iconColor: selectedIconColor,
       iconBackgroundColor: selectedIconBackgroundColor,
       embeddedImage: _selectedImage,
@@ -198,43 +194,93 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 上部ラベル
             if (topText != null && topText!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Text(topText!, style: topLabelStyle),
+                child: Center(
+                  child: Text(
+                    topText!,
+                    style: topLabelStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
 
-            // QRコード本体
+            // QRコード本体（Stackで重ねる）
             Container(
               decoration: decoration,
               padding: const EdgeInsets.all(16),
-              child: QrImageView(
-                data: widget.qrData.content,
-                version: QrVersions.auto,
-                size: 180,
-                eyeStyle: QrEyeStyle(
-                  eyeShape: QrEyeShape.square,
-                  color: foregroundColor,
+              child: SizedBox(
+                width: 180,
+                height: 180,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // QRコード本体
+                    QrImageView(
+                      data: widget.qrData.content,
+                      version: QrVersions.auto,
+                      size: 180,
+                      foregroundColor: foregroundColor,
+                      backgroundColor: Colors.transparent,
+                      errorCorrectionLevel: QrErrorCorrectLevel.H,
+                      eyeStyle: QrEyeStyle(
+                        eyeShape:
+                            selectedPixelShape == 'circle'
+                                ? QrEyeShape.circle
+                                : QrEyeShape.square,
+                        color: foregroundColor,
+                      ),
+                      dataModuleStyle: QrDataModuleStyle(
+                        dataModuleShape:
+                            selectedPixelShape == 'circle'
+                                ? QrDataModuleShape.circle
+                                : QrDataModuleShape.square,
+                        color: foregroundColor,
+                      ),
+                    ),
+
+                    // 中央のアイコン（直接表示）
+                    if (_selectedImage != null)
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.file(_selectedImage!),
+                        ),
+                      )
+                    else if (_selectedIcon != null)
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: selectedIconBackgroundColor,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            _selectedIcon,
+                            color: selectedIconColor,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                dataModuleStyle: QrDataModuleStyle(
-                  dataModuleShape: QrDataModuleShape.square,
-                  color: foregroundColor,
-                ),
-                backgroundColor: Colors.transparent,
-                embeddedImage: _embeddedIconImage,
-                embeddedImageStyle: const QrEmbeddedImageStyle(
-                  size: Size(48, 48),
-                ),
-                errorCorrectionLevel: QrErrorCorrectLevel.H,
               ),
             ),
 
-            // 下部ラベル
             if (bottomText != null && bottomText!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
-                child: Text(bottomText!, style: bottomLabelStyle),
+                child: Center(
+                  child: Text(
+                    bottomText!,
+                    style: bottomLabelStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
           ],
         ),
@@ -244,11 +290,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
 
   //コード部分のタブ
   Widget _buildCodeTab() {
-    final subTabs = const [
-      Tab(text: "色"),
-      Tab(text: "ピクセル形"),
-      Tab(text: "目の形"),
-    ];
+    final subTabs = const [Tab(text: "色"), Tab(text: "ピクセル形")];
 
     return DefaultTabController(
       length: subTabs.length,
@@ -263,11 +305,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
           ),
           Expanded(
             child: TabBarView(
-              children: [
-                _buildColorSettings(),
-                _buildPixelShapeSettings(),
-                _buildEyeShapeSettings(),
-              ],
+              children: [_buildColorSettings(), _buildPixelShapeSettings()],
             ),
           ),
         ],
@@ -302,15 +340,6 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
             spacing: 8,
             children: [
               ChoiceChip(
-                label: const Text("丸"),
-                selected: selectedPixelShape == 'circle',
-                onSelected: (_) {
-                  setState(() {
-                    selectedPixelShape = 'circle';
-                  });
-                },
-              ),
-              ChoiceChip(
                 label: const Text("四角"),
                 selected: selectedPixelShape == 'square',
                 onSelected: (_) {
@@ -320,33 +349,14 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                 },
               ),
               ChoiceChip(
-                label: const Text("ダイヤ"),
-                selected: selectedPixelShape == 'diamond',
+                label: const Text("丸"),
+                selected: selectedPixelShape == 'circle',
                 onSelected: (_) {
                   setState(() {
-                    selectedPixelShape = 'diamond';
+                    selectedPixelShape = 'circle';
                   });
                 },
               ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEyeShapeSettings() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          const Text("目の形（仮）"),
-          Wrap(
-            spacing: 8,
-            children: [
-              ChoiceChip(label: const Text("標準"), selected: true),
-              ChoiceChip(label: const Text("丸型"), selected: false),
-              ChoiceChip(label: const Text("フレーム"), selected: false),
             ],
           ),
         ],
@@ -436,9 +446,6 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
   }
 
   //中央部分のタブ
-  /*Widget _buildCenterTab() {
-    return const Center(child: Text("中央の画像・文字（未実装）"));
-  }*/
   Widget _buildIconTab() {
     final subTabs = const [
       Tab(text: "アイコン"),
@@ -530,71 +537,10 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
     // … 必要に応じて追加
   ];
 
-  Future<MemoryImage?> _iconToImageProvider(
-    IconData iconData,
-    Color iconColor,
-    Color backgroundColor,
-    double size,
-  ) async {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final radius = size / 2;
-
-    // 1. 背景（白円）を描画
-    final Paint bgPaint = Paint()..color = backgroundColor;
-    canvas.drawCircle(Offset(radius, radius), radius, bgPaint);
-
-    // 2. アイコンを描画
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: String.fromCharCode(iconData.codePoint),
-        style: TextStyle(
-          fontSize: size * 0.6, // 少し小さめにして中心に配置
-          fontFamily: iconData.fontFamily,
-          package: iconData.fontPackage,
-          color: iconColor,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout();
-
-    final offset = Offset(
-      radius - textPainter.width / 2,
-      radius - textPainter.height / 2,
-    );
-
-    textPainter.paint(canvas, offset);
-
-    // 3. 画像化
-    final picture = recorder.endRecording();
-    final image = await picture.toImage(size.toInt(), size.toInt());
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-
-    if (byteData == null) return null;
-    return MemoryImage(byteData.buffer.asUint8List());
-  }
-
   Future<void> _onIconSelected(IconData? iconData) async {
-    if (iconData == null) {
-      setState(() {
-        _selectedIcon = null;
-        _embeddedIconImage = null;
-      });
-      return;
-    }
-
-    final image = await _iconToImageProvider(
-      iconData,
-      selectedIconColor,
-      selectedIconBackgroundColor,
-      48,
-    );
-
     setState(() {
       _selectedIcon = iconData;
-      _embeddedIconImage = image;
+      _selectedImage = null;
     });
   }
 
@@ -622,7 +568,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                     onColorSelected: (color) {
                       setState(() {
                         selectedIconColor = color;
-                        _updateEmbeddedIcon();
+                        //_updateEmbeddedIcon();
                       });
                     },
                   ),
@@ -635,7 +581,7 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                     onColorSelected: (color) {
                       setState(() {
                         selectedIconBackgroundColor = color;
-                        _updateEmbeddedIcon();
+                        //_updateEmbeddedIcon();
                       });
                     },
                   ),
@@ -648,29 +594,13 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
     );
   }
 
-  Future<void> _updateEmbeddedIcon() async {
-    if (_selectedIcon == null) return;
-
-    final image = await _iconToImageProvider(
-      _selectedIcon!,
-      selectedIconColor,
-      selectedIconBackgroundColor,
-      48,
-    );
-
-    if (!mounted) return;
-
-    setState(() {
-      _embeddedIconImage = image;
-    });
-  }
-
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() {
         _selectedImage = File(picked.path);
+        _selectedIcon = null;
       });
     }
   }
@@ -683,11 +613,13 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
           ElevatedButton(onPressed: _pickImage, child: const Text('画像を選択')),
           const SizedBox(height: 16),
           if (_selectedImage != null)
-            Image.file(
-              _selectedImage!,
+            SizedBox(
               width: 150,
               height: 150,
-              fit: BoxFit.contain,
+              child: FittedBox(
+                fit: BoxFit.contain, // ここで縦横比を保ったまま縮小
+                child: Image.file(_selectedImage!),
+              ),
             )
           else
             const Text('画像が選択されていません。'),
@@ -724,10 +656,19 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
   final availableFonts = [
     'Noto Sans JP',
     'Roboto',
-    'Arial',
-    'Times New Roman',
-    'Courier New',
+    'Open Sans',
+    'Kosugi Maru',
+    'Shippori Mincho',
   ];
+
+  final Map<String, TextStyle Function({double? fontSize, Color? color})>
+  fontMap = {
+    'Noto Sans JP': GoogleFonts.notoSansJp,
+    'Roboto': GoogleFonts.roboto,
+    'Open Sans': GoogleFonts.openSans,
+    'Kosugi Maru': GoogleFonts.kosugiMaru,
+    'Shippori Mincho': GoogleFonts.shipporiMincho,
+  };
 
   Widget _buildTopLabelInput() {
     return SingleChildScrollView(
@@ -774,19 +715,25 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
           // ② フォント選択
           const Text("フォント"),
           DropdownButton<String>(
-            value: topLabelStyle.fontFamily,
+            value: selectedTopFont,
             isExpanded: true,
             items:
                 availableFonts.map((font) {
                   return DropdownMenuItem(
                     value: font,
-                    child: Text(font, style: TextStyle(fontFamily: font)),
+                    child: Text(font, style: fontMap[font]!(fontSize: 16)),
                   );
                 }).toList(),
             onChanged: (value) {
-              setState(() {
-                topLabelStyle = topLabelStyle.copyWith(fontFamily: value);
-              });
+              if (value != null) {
+                setState(() {
+                  selectedTopFont = value;
+                  topLabelStyle = fontMap[selectedTopFont]!(
+                    fontSize: topLabelStyle.fontSize,
+                    color: topLabelStyle.color,
+                  );
+                });
+              }
             },
           ),
 
@@ -868,21 +815,26 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
             const SizedBox(height: 24),
             const Text("フォント"),
             DropdownButton<String>(
-              value: bottomLabelStyle.fontFamily ?? availableFonts.first,
-              onChanged: (String? newFont) {
-                setState(() {
-                  bottomLabelStyle = bottomLabelStyle.copyWith(
-                    fontFamily: newFont,
-                  );
-                });
-              },
+              value: selectedBottomFont,
+              isExpanded: true,
               items:
-                  availableFonts
-                      .map(
-                        (font) =>
-                            DropdownMenuItem(value: font, child: Text(font)),
-                      )
-                      .toList(),
+                  availableFonts.map((font) {
+                    return DropdownMenuItem(
+                      value: font,
+                      child: Text(font, style: fontMap[font]!(fontSize: 16)),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    selectedBottomFont = value;
+                    bottomLabelStyle = fontMap[selectedBottomFont]!(
+                      fontSize: bottomLabelStyle.fontSize,
+                      color: bottomLabelStyle.color,
+                    );
+                  });
+                }
+              },
             ),
 
             const SizedBox(height: 24),
