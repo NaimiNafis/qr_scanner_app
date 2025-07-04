@@ -68,4 +68,14 @@ class DBHelper {
       whereArgs: [id],
     );
   }
+
+  Future<int> deleteMultipleQRCodes(List<int> ids) async {
+    final db = await database;
+    final placeholders = ids.map((_) => '?').join(',');
+    return await db.delete(
+      'qr_codes',
+      where: 'id IN ($placeholders)',
+      whereArgs: ids,
+    );
+  }
 }
