@@ -1,13 +1,8 @@
-# QR Scanner App
+# QRious
 
 A modern, feature-rich QR code scanner and generator with built-in security features.
 
 ![App Banner](assets/screenshots/banner.png)
-
-## 📱 Download
-
-[![Download on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store)
-[![Download on App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](https://apps.apple.com/us/app/)
 
 ## ✨ Features
 
@@ -18,10 +13,22 @@ A modern, feature-rich QR code scanner and generator with built-in security feat
 - **Customize** QR code appearance
 - **Dark mode** support
 
+## 📱 Screenshots
+
+### Light Mode
 <p align="center">
-  <img src="assets/screenshots/scan.png" width="30%" />
-  <img src="assets/screenshots/create.png" width="30%" /> 
-  <img src="assets/screenshots/history.png" width="30%" />
+  <img src="assets/screenshots/lm_scan.png" width="24%" />
+  <img src="assets/screenshots/lm_creator.png" width="24%" />
+  <img src="assets/screenshots/lm_history_lists.png" width="24%" />
+  <img src="assets/screenshots/lm_history_favorites.png" width="24%" />
+</p>
+
+### Dark Mode
+<p align="center">
+  <img src="assets/screenshots/dm_scan.png" width="24%" />
+  <img src="assets/screenshots/dm_creator.png" width="24%" />
+  <img src="assets/screenshots/dm_history_lists.png" width="24%" />
+  <img src="assets/screenshots/dm_history_favorites.png" width="24%" />
 </p>
 
 ## 🚀 Quick Start
@@ -37,8 +44,8 @@ A modern, feature-rich QR code scanner and generator with built-in security feat
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/username/qr_scanner_app.git
-   cd qr_scanner_app
+   git clone https://github.com/yourusername/QRious.git
+   cd QRious
    ```
 
 2. **Install dependencies**
@@ -74,7 +81,7 @@ If camera doesn't work, check that you've granted camera permission in your devi
 
 ## 💡 Contributing
 
-Contributions are welcome! See [FEATURES.md](FEATURES.md) for detailed technical documentation.
+Contributions are welcome! For more details about the app's architecture and implementation, check [appcore.md](appcore.md).
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -88,17 +95,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📩 Contact
 
-Project Link: [https://github.com/username/qr_scanner_app](https://github.com/username/qr_scanner_app)
-
----
-
-### Screenshots
-
-<p align="center">
-  <img src="assets/screenshots/screenshot1.png" width="24%" />
-  <img src="assets/screenshots/screenshot2.png" width="24%" />
-  <img src="assets/screenshots/screenshot3.png" width="24%" />
-  <img src="assets/screenshots/screenshot4.png" width="24%" />
-</p>
-
-*Note: Replace placeholder images with actual screenshots of your app.*
+Project Link: [https://github.com/NaimiNafis/QRious](https://github.com/NaimiNafis/QRious)
