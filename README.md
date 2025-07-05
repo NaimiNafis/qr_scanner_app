@@ -1,7 +1,4 @@
 # 🔎 QRious
-<p align="center">
-  <img src="assets/screenshots/banner.png" alt="QRious Banner">
-</p>
 
 <p align="center">
   <a href="https://flutter.dev/">
@@ -9,9 +6,6 @@
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
-  </a>
-  <a href="https://github.com/NaimiNafis/QRious">
-    <img src="https://img.shields.io/github/repo-size/NaimiNafis/QRious" alt="Repo Size">
   </a>
 </p>
 
