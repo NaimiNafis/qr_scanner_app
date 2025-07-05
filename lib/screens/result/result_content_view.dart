@@ -47,7 +47,10 @@ class ResultContentView extends StatelessWidget {
         
         // Safety check for URLs
         if (type == 'URL')
-          const SafetyIndicator(),
+          SafetyIndicator(
+            content: content,
+            type: type,
+          ),
         
         const Spacer(),
         

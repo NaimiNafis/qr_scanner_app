@@ -60,6 +60,9 @@ dependencies:
   # UI
   flutter_colorpicker: ^1.1.0
 
+  # HTTP for API calls
+  http: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

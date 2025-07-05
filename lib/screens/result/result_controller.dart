@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../providers/history_provider.dart';
 import '../../models/qr_code_model.dart';
+import '../../utils/url_safety_util.dart';
 
 class ResultController {
   final BuildContext context;
@@ -78,8 +79,15 @@ class ResultController {
       // Item doesn't exist, continue to create it
     }
     
-    // Otherwise add a new one
-    await historyProvider.addQRCode(content, type);
+    // Check safety for URLs before adding
+    bool isSafe = true;
+    if (type == 'URL') {
+      final safetyResult = await UrlSafetyUtil.checkUrlWithApi(content);
+      isSafe = safetyResult['isSafe'] ?? true;
+    }
+    
+    // Add to history with safety flag
+    await historyProvider.addQRCode(content, type, isSafe: isSafe);
     
     // Find the newly added code
     await historyProvider.fetchHistory();

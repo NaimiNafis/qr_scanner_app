@@ -38,6 +38,7 @@ class AppColors {
   // Success and Error (can remain the same or be themed)
   static Color get success => Colors.green.shade400;
   static Color get error => Colors.red.shade400;
+  static Color get danger => Colors.red.shade400; // Alias for error
 
   // Text colors
   static Color get textDark => _isDarkMode ? _darkTextLight : _lightTextDark;
