@@ -16,11 +16,12 @@ class HistoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addQRCode(String content, String type) async {
+  Future<void> addQRCode(String content, String type, {bool isSafe = true}) async {
     final newCode = QRCodeModel(
       content: content,
       type: type,
       timestamp: DateTime.now(),
+      isSafe: isSafe,
     );
     await _dbHelper.insertQRCode(newCode);
     await fetchHistory();
@@ -34,6 +35,7 @@ class HistoryProvider extends ChangeNotifier {
       type: code.type,
       isFavorite: !code.isFavorite,
       timestamp: code.timestamp,
+      isSafe: code.isSafe,
     );
     await _dbHelper.updateQRCode(updatedCode);
     await fetchHistory();
@@ -64,6 +66,7 @@ class HistoryProvider extends ChangeNotifier {
           type: code.type,
           isFavorite: makeFavorite,
           timestamp: code.timestamp,
+          isSafe: code.isSafe,
         );
         await _dbHelper.updateQRCode(updatedCode);
       }

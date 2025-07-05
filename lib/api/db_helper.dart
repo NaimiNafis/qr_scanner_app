@@ -20,8 +20,9 @@ class DBHelper {
     final path = join(dbPath, 'qr_history.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -32,9 +33,16 @@ class DBHelper {
         content TEXT NOT NULL,
         type TEXT NOT NULL,
         isFavorite INTEGER NOT NULL,
-        timestamp TEXT NOT NULL
+        timestamp TEXT NOT NULL,
+        isSafe INTEGER NOT NULL DEFAULT 1
       )
     ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE qr_codes ADD COLUMN isSafe INTEGER NOT NULL DEFAULT 1');
+    }
   }
 
   Future<int> insertQRCode(QRCodeModel qrCode) async {

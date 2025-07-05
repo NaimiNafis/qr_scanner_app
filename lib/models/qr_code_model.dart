@@ -6,6 +6,7 @@ class QRCodeModel {
   final String type;
   final bool isFavorite;
   final DateTime timestamp;
+  final bool isSafe;
 
   QRCodeModel({
     this.id,
@@ -13,6 +14,7 @@ class QRCodeModel {
     required this.type,
     this.isFavorite = false,
     required this.timestamp,
+    this.isSafe = true,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,6 +24,7 @@ class QRCodeModel {
       'type': type,
       'isFavorite': isFavorite ? 1 : 0,
       'timestamp': timestamp.toIso8601String(),
+      'isSafe': isSafe ? 1 : 0,
     };
   }
 
@@ -32,6 +35,7 @@ class QRCodeModel {
       type: map['type'],
       isFavorite: map['isFavorite'] == 1,
       timestamp: DateTime.parse(map['timestamp']),
+      isSafe: map['isSafe'] == 1,
     );
   }
 }

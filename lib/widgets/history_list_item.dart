@@ -1,1 +1,0 @@
-// A widget for a single row in the history list

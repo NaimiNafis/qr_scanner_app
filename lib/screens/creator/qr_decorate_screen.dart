@@ -221,7 +221,6 @@ class _QrDecorateScreenState extends State<QrDecorateScreen>
                       data: widget.qrData.content,
                       version: QrVersions.auto,
                       size: 180,
-                      foregroundColor: foregroundColor,
                       backgroundColor: Colors.transparent,
                       errorCorrectionLevel: QrErrorCorrectLevel.H,
                       eyeStyle: QrEyeStyle(

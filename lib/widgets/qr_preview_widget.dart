@@ -66,7 +66,6 @@ class QrPreviewWidget extends StatelessWidget {
                   data: qrData.content,
                   version: QrVersions.auto,
                   size: 200,
-                  foregroundColor: settings.foregroundColor,
                   backgroundColor: Colors.transparent,
                   errorCorrectionLevel: QrErrorCorrectLevel.H,
                   eyeStyle: QrEyeStyle(
