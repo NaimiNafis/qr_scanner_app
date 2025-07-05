@@ -37,7 +37,7 @@ class HistoryEmptyState extends StatelessWidget {
                 : 'Scan a QR code to see it here',
             style: TextStyle(
               fontSize: 16,
-              color: AppColors.primaryLight,
+              color: AppColors.primary,
             ),
           ),
         ],

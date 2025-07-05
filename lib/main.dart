@@ -6,6 +6,7 @@ import 'package:qr_scanner_app/screens/scanner/scanner_screen.dart';
 import 'package:qr_scanner_app/screens/history/history_screen.dart';
 import 'package:qr_scanner_app/screens/creator/creator_screen.dart';
 import 'package:qr_scanner_app/utils/app_colors.dart';
+import 'package:qr_scanner_app/utils/theme_helper.dart';
 import 'package:qr_scanner_app/widgets/bottom_nav_bar.dart';
 
 // Main entry point for the app
@@ -38,11 +39,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'QR Scanner',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.brown,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        brightness: themeProvider.isDarkMode ? Brightness.dark : Brightness.light,
-      ),
+      theme: ThemeHelper.getLightTheme(),
+      darkTheme: ThemeHelper.getDarkTheme(),
+      themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: const MainNavigationScreen(),
       routes: {
         '/result': (context) => const ScannerScreen(),
